@@ -1,0 +1,48 @@
+{{template "header"}}
+	<title>{{.Topic.Title}}</title>
+</head>
+<body>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			{{template "navbar" .}}
+		</div>
+	</div>
+
+	<div class="container">
+		{{$label := .Labels}}
+		{{with .Topic}}
+			<h1>{{.Title}}<small>({{.Category}})</small></h1>
+			<h5>
+				{{range $label}}
+					<a href="/?label={{.}}">{{.}}</a>
+				{{end}}
+			</h5>
+			{{.Content}}
+			<h5>文章附件:<a href="/attachment/{{.Attachment}}">{{.Attachment}}</a></h5>
+		{{end}}
+	</div>
+
+	<div class="container">
+	{{$tid := .Topic.Id}}
+	{{$IsLogin := .IsLogin}}
+		{{range .Replies}}
+			<h3>{{.Name}} <small>{{.Created}}</small>{{if $IsLogin}}<a href="/reply/delete?rid={{.Id}}&&tid={{$tid}}">删除</a>{{end}}</h3>
+			{{.Content}}
+		{{end}}
+		<h3>本文回复</h3>
+		<form method="post" action="/reply/add">
+			<input type="hidden" name="tid" value="{{.Topic.Id}}">
+			<div class="form-group">
+				<label>显示昵称:</label>
+				<input type="text" class="form-control" name="nickname">
+			</div>
+
+			<div class="form_group">
+				<label>内容:</label>
+				<textarea class="form-control" id="" name="content" rows="10" cols="30"></textarea>
+			</div>
+			<button class="btn btn-default">提交回复</button>
+		</form>
+	</div>
+</body>
+</html>
